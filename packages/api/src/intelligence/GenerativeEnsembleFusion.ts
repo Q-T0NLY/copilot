@@ -5,7 +5,7 @@
  * to produce optimal responses with 99.99% accuracy targets
  */
 
-import { MultiModelConsensus } from '../llm/MultiModelConsensus';
+import MultiModelConsensus from '../llm/MultiModelConsensus';
 
 export interface EnsembleResult {
   fusedOutput: string;
@@ -111,10 +111,11 @@ export class GenerativeEnsembleFusion {
     const useProjectContext = options?.projectContext ?? true;
 
     // Step 1: Get multi-model consensus
-    const consensusResult = await this.consensus.evaluateWithConsensus(
-      prompt,
-      context,
-      'weighted'
+    const models = options?.models || ['gpt-4', 'claude-3-opus-20240229'];
+    const consensusResult = await this.consensus.evaluateParallel(
+      prompt + (context ? `\n\nContext: ${context}` : ''),
+      models,
+      { requireConsensus: false }
     );
 
     // Step 2: Extract knowledge from graph
@@ -124,12 +125,12 @@ export class GenerativeEnsembleFusion {
 
     // Step 3: Apply project intelligence
     const projectEnhancement = useProjectContext
-      ? this.applyProjectIntelligence(prompt, consensusResult.consensus)
-      : consensusResult.consensus;
+      ? this.applyProjectIntelligence(prompt, consensusResult.finalResponse)
+      : consensusResult.finalResponse;
 
     // Step 4: Fuse all sources
     const fusedOutput = this.performFusion(
-      consensusResult.consensus,
+      consensusResult.finalResponse,
       relevantKnowledge,
       projectEnhancement
     );

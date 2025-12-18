@@ -10,7 +10,8 @@ import { ProjectGraph } from '../intelligence/ProjectGraph';
 
 const router = Router();
 const gef = new GenerativeEnsembleFusion();
-const projectGraph = new ProjectGraph(process.cwd());
+const projectRoot = process.env.PROJECT_ROOT || process.cwd();
+const projectGraph = new ProjectGraph(projectRoot);
 
 /**
  * POST /api/intelligence/gef/fuse
