@@ -1,0 +1,27 @@
+{
+  "name": "ai-dev-platform",
+  "version": "1.0.0",
+  "description": "World-class AI-powered development platform with advanced code completion, generation, and visual reasoning",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "cli": "node packages/cli/dist/index.js",
+    "ui": "cd packages/ui && npm run dev",
+    "api": "cd packages/api && npm run dev"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.16",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
