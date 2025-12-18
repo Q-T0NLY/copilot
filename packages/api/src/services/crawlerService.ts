@@ -72,11 +72,15 @@ export class CrawlerService {
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     const data = await page.evaluate(() => {
+      // @ts-ignore - document is available in browser context
       const title = document.title;
+      // @ts-ignore
       const content = document.body.innerText;
+      // @ts-ignore
       const links = Array.from(document.querySelectorAll('a'))
-        .map(a => a.href)
-        .filter(href => href.startsWith('http'));
+        // @ts-ignore
+        .map((a) => a.href)
+        .filter((href: string) => href.startsWith('http'));
 
       return { title, content, links };
     });

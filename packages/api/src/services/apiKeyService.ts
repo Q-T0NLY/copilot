@@ -45,7 +45,7 @@ export class ApiKeyService {
     return this.keys.has(key);
   }
 
-  async trackUsage(key: string, endpoint: string): Promise<void> {
+  async trackUsage(key: string, _endpoint: string): Promise<void> {
     const apiKey = this.keys.get(key);
     if (apiKey) {
       apiKey.usageCount++;

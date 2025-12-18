@@ -9,7 +9,8 @@ router.post('/crawl', async (req, res, next) => {
     const { url, javascript = false } = req.body;
 
     if (!url) {
-      return res.status(400).json({ error: 'URL is required' });
+      res.status(400).json({ error: 'URL is required' });
+      return;
     }
 
     const result = await crawlerService.crawl(url, javascript);
@@ -24,7 +25,8 @@ router.post('/crawl/batch', async (req, res, next) => {
     const { urls, javascript = false } = req.body;
 
     if (!urls || !Array.isArray(urls)) {
-      return res.status(400).json({ error: 'URLs array is required' });
+      res.status(400).json({ error: 'URLs array is required' });
+      return;
     }
 
     const results = await crawlerService.scrapeMultiple(urls, javascript);

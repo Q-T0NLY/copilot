@@ -9,7 +9,8 @@ router.post('/register', async (req, res, next) => {
     const { name } = req.body;
     
     if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+      res.status(400).json({ error: 'Name is required' });
+      return;
     }
 
     const apiKey = await apiKeyService.generateKey(name);
@@ -19,7 +20,7 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-router.get('/keys', async (req, res, next) => {
+router.get('/keys', async (_req, res, next) => {
   try {
     const keys = await apiKeyService.listKeys();
     res.json({ keys });

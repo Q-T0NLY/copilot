@@ -3,12 +3,12 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import figlet from 'figlet';
-import { initCommand } from './commands/init';
-import { chatCommand } from './commands/chat';
-import { generateCommand } from './commands/generate';
-import { completeCommand } from './commands/complete';
-import { crawlCommand } from './commands/crawl';
-import { settingsCommand } from './commands/settings';
+import { initCommand } from './commands/init.js';
+import { chatCommand } from './commands/chat.js';
+import { generateCommand } from './commands/generate.js';
+import { completeCommand } from './commands/complete.js';
+import { crawlCommand } from './commands/crawl.js';
+import { settingsCommand } from './commands/settings.js';
 
 const program = new Command();
 

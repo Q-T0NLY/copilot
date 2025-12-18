@@ -2,6 +2,7 @@
   "name": "@ai-dev-platform/cli",
   "version": "1.0.0",
   "description": "Interactive CLI for AI-powered development",
+  "type": "module",
   "main": "dist/index.js",
   "bin": {
     "aidev": "dist/index.js",
