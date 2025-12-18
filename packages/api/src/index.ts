@@ -8,10 +8,13 @@ import { crawlerRouter } from './routes/crawler';
 import { settingsRouter } from './routes/settings';
 import { databaseRouter } from './routes/database';
 import { healingRouter } from './routes/healing';
+import performanceRouter from './routes/performance';
+import consensusRouter from './routes/consensus';
 import { apiKeyMiddleware } from './middleware/apiKey';
 import { errorHandler } from './middleware/errorHandler';
 import { PostgresDatabase } from './database/postgres';
 import { MongoDatabase } from './database/mongo';
+import PerformanceMonitor from './performance/PerformanceMonitor';
 
 dotenv.config();
 
@@ -26,6 +29,19 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' }));
 
+// Performance monitoring middleware
+const perfMonitor = PerformanceMonitor.getInstance();
+app.use((req, res, next) => {
+  const startTime = perfMonitor.startRequest();
+  
+  res.on('finish', () => {
+    const success = res.statusCode < 400;
+    perfMonitor.endRequest(startTime, success);
+  });
+  
+  next();
+});
+
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -38,6 +54,8 @@ app.use('/api/crawler', apiKeyMiddleware, crawlerRouter);
 app.use('/api/settings', apiKeyMiddleware, settingsRouter);
 app.use('/api/database', apiKeyMiddleware, databaseRouter);
 app.use('/api/healing', apiKeyMiddleware, healingRouter);
+app.use('/api/performance', performanceRouter);
+app.use('/api/consensus', apiKeyMiddleware, consensusRouter);
 
 // Error handling
 app.use(errorHandler);

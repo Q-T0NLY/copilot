@@ -2,6 +2,9 @@
 node_modules/
 .pnp
 .pnp.js
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # Testing
 coverage/
@@ -11,6 +14,7 @@ dist/
 build/
 .next/
 out/
+*.tsbuildinfo
 
 # Misc
 .DS_Store
@@ -40,3 +44,18 @@ yarn-error.log*
 
 # OS
 Thumbs.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache
+.cache/
+.eslintcache
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+

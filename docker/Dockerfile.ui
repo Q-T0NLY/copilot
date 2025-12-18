@@ -1,0 +1,47 @@
+# AI Development Platform - Web UI
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY packages/ui/package*.json ./packages/ui/
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY packages/ui ./packages/ui
+COPY tsconfig.json ./
+
+# Build the application
+WORKDIR /app/packages/ui
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY packages/ui/package*.json ./packages/ui/
+
+# Install production dependencies only
+RUN npm ci --production
+
+# Copy built application from builder
+COPY --from=builder /app/packages/ui/.next ./packages/ui/.next
+COPY --from=builder /app/packages/ui/public ./packages/ui/public
+COPY --from=builder /app/packages/ui/next.config.js ./packages/ui/
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); })"
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+WORKDIR /app/packages/ui
+CMD ["npm", "start"]
