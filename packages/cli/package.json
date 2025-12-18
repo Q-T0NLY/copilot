@@ -1,0 +1,37 @@
+{
+  "name": "@ai-dev-platform/cli",
+  "version": "1.0.0",
+  "description": "Interactive CLI for AI-powered development",
+  "main": "dist/index.js",
+  "bin": {
+    "aidev": "dist/index.js",
+    "ai-dev": "dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "boxen": "^7.1.1",
+    "axios": "^1.6.2",
+    "figlet": "^1.7.0",
+    "cli-table3": "^0.6.3",
+    "dotenv": "^16.3.1",
+    "conf": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/figlet": "^1.5.8",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "eslint": "^8.55.0"
+  }
+}
