@@ -75,4 +75,44 @@ router.post('/code/generate', async (req, res, next) => {
   }
 });
 
+// New endpoint for inline AI suggestions (Cursor AI-like)
+router.post('/code/inline-suggest', async (req, res, next) => {
+  try {
+    const { code, language, cursorPosition, context } = req.body;
+
+    if (!code || !language) {
+      res.status(400).json({ error: 'Code and language are required' });
+      return;
+    }
+
+    const suggestion = await llmService.getInlineSuggestion(
+      code,
+      language,
+      cursorPosition,
+      context
+    );
+
+    res.json({ suggestion });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// New endpoint for code explanation
+router.post('/code/explain', async (req, res, next) => {
+  try {
+    const { code, language } = req.body;
+
+    if (!code || !language) {
+      res.status(400).json({ error: 'Code and language are required' });
+      return;
+    }
+
+    const explanation = await llmService.explainCode(code, language);
+    res.json({ explanation });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { router as llmRouter };

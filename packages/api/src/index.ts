@@ -6,8 +6,12 @@ import { authRouter } from './routes/auth';
 import { llmRouter } from './routes/llm';
 import { crawlerRouter } from './routes/crawler';
 import { settingsRouter } from './routes/settings';
+import { databaseRouter } from './routes/database';
+import { healingRouter } from './routes/healing';
 import { apiKeyMiddleware } from './middleware/apiKey';
 import { errorHandler } from './middleware/errorHandler';
+import { PostgresDatabase } from './database/postgres';
+import { MongoDatabase } from './database/mongo';
 
 dotenv.config();
 
@@ -32,13 +36,49 @@ app.use('/api/auth', authRouter);
 app.use('/api/llm', apiKeyMiddleware, llmRouter);
 app.use('/api/crawler', apiKeyMiddleware, crawlerRouter);
 app.use('/api/settings', apiKeyMiddleware, settingsRouter);
+app.use('/api/database', apiKeyMiddleware, databaseRouter);
+app.use('/api/healing', apiKeyMiddleware, healingRouter);
 
 // Error handling
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`🚀 API Gateway running on http://localhost:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// Initialize databases and start server
+async function initializeAndStart() {
+  try {
+    // Initialize PostgreSQL
+    const postgres = PostgresDatabase.getInstance();
+    await postgres.initialize();
+    console.log('✅ PostgreSQL initialized');
+
+    // Initialize MongoDB (optional - will fail gracefully if not configured)
+    try {
+      const mongo = MongoDatabase.getInstance();
+      await mongo.connect();
+      console.log('✅ MongoDB initialized');
+    } catch (mongoError) {
+      console.warn('⚠️  MongoDB not available (optional)');
+    }
+
+    // Start Express server
+    app.listen(PORT, () => {
+      console.log(`🚀 API Gateway running on http://localhost:${PORT}`);
+      console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
+  } catch (error) {
+    console.error('Failed to initialize:', error);
+    // In development, continue without database
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️  Starting without database connections');
+      app.listen(PORT, () => {
+        console.log(`🚀 API Gateway running on http://localhost:${PORT}`);
+        console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+      });
+    } else {
+      process.exit(1);
+    }
+  }
+}
+
+initializeAndStart();
 
 export default app;

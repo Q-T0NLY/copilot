@@ -97,13 +97,70 @@ export class LLMService {
   }
 
   async generateCode(description: string, language: string): Promise<string> {
-    const prompt = `Generate ${language} code for: ${description}`;
-    
-    return this.complete({
+    const prompt = `Generate ${language} code for the following requirement:\n\n${description}\n\nProvide only the code without explanations.`;
+
+    const completion = await this.complete({
       provider: 'openai',
       model: 'gpt-4',
       prompt,
-      temperature: 0.5
+      maxTokens: 2000
     });
+
+    return completion;
+  }
+
+  async getInlineSuggestion(
+    code: string,
+    language: string,
+    cursorPosition: { line: number; column: number },
+    context: string
+  ): Promise<string> {
+    const prompt = `You are an AI code completion assistant like GitHub Copilot or Cursor AI.
+
+Current code:
+\`\`\`${language}
+${code}
+\`\`\`
+
+Cursor is at line ${cursorPosition.line}, column ${cursorPosition.column}.
+Current line context: "${context}"
+
+Provide ONLY the next few characters or tokens that would naturally continue from this position. 
+Be concise - provide just the immediate completion, not entire functions.
+Respond with ONLY the code suggestion, no explanations.`;
+
+    try {
+      const completion = await this.complete({
+        provider: 'openai',
+        model: 'gpt-4',
+        prompt,
+        maxTokens: 100,
+        temperature: 0.3
+      });
+
+      return completion.trim();
+    } catch (error) {
+      console.error('Inline suggestion error:', error);
+      return '';
+    }
+  }
+
+  async explainCode(code: string, language: string): Promise<string> {
+    const prompt = `Explain the following ${language} code in clear, concise terms:
+
+\`\`\`${language}
+${code}
+\`\`\`
+
+Provide a detailed explanation of what this code does, how it works, and any important patterns or concepts used.`;
+
+    const explanation = await this.complete({
+      provider: 'openai',
+      model: 'gpt-4',
+      prompt,
+      maxTokens: 1000
+    });
+
+    return explanation;
   }
 }

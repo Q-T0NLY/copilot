@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import ChatPanel from '@/components/ChatPanel'
-import CodeEditor from '@/components/CodeEditor'
+import CursorAICodeEditor from '@/components/CursorAICodeEditor'
 import VisualReasoning from '@/components/VisualReasoning'
 import SettingsPanel from '@/components/SettingsPanel'
 import { Code, MessageSquare, Brain, Settings } from 'lucide-react'
@@ -72,7 +72,7 @@ export default function Home() {
             <header className="bg-gray-800 border-b border-gray-700 px-8 py-4">
               <h1 className="text-2xl font-bold text-white">
                 {activeTab === 'chat' && '💬 AI Chat Assistant'}
-                {activeTab === 'code' && '💻 Code Editor'}
+                {activeTab === 'code' && '💻 Cursor AI Code Editor'}
                 {activeTab === 'visual' && '🧠 Visual Reasoning'}
                 {activeTab === 'settings' && '⚙️ Settings'}
               </h1>
@@ -81,7 +81,7 @@ export default function Home() {
             {/* Content Area */}
             <div className="flex-1 overflow-hidden">
               {activeTab === 'chat' && <ChatPanel />}
-              {activeTab === 'code' && <CodeEditor />}
+              {activeTab === 'code' && <CursorAICodeEditor />}
               {activeTab === 'visual' && <VisualReasoning />}
               {activeTab === 'settings' && <SettingsPanel />}
             </div>
