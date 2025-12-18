@@ -11,6 +11,10 @@ import { healingRouter } from './routes/healing';
 import performanceRouter from './routes/performance';
 import consensusRouter from './routes/consensus';
 import intelligenceRouter from './routes/intelligence';
+import codexRouter from './routes/codex';
+import copilotRouter from './routes/copilot';
+import aiderRouter from './routes/aider';
+import warpRouter from './routes/warp';
 import { apiKeyMiddleware } from './middleware/apiKey';
 import { errorHandler } from './middleware/errorHandler';
 import { PostgresDatabase } from './database/postgres';
@@ -58,6 +62,10 @@ app.use('/api/healing', apiKeyMiddleware, healingRouter);
 app.use('/api/performance', performanceRouter);
 app.use('/api/consensus', apiKeyMiddleware, consensusRouter);
 app.use('/api/intelligence', apiKeyMiddleware, intelligenceRouter);
+app.use('/api/codex', apiKeyMiddleware, codexRouter);
+app.use('/api/copilot', apiKeyMiddleware, copilotRouter);
+app.use('/api/aider', apiKeyMiddleware, aiderRouter);
+app.use('/api/warp', apiKeyMiddleware, warpRouter);
 
 // Error handling
 app.use(errorHandler);
