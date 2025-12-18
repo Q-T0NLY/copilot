@@ -15,6 +15,7 @@ import codexRouter from './routes/codex';
 import copilotRouter from './routes/copilot';
 import aiderRouter from './routes/aider';
 import warpRouter from './routes/warp';
+import advancedAIRouter from './routes/advanced-ai';
 import { apiKeyMiddleware } from './middleware/apiKey';
 import { errorHandler } from './middleware/errorHandler';
 import { PostgresDatabase } from './database/postgres';
@@ -66,6 +67,7 @@ app.use('/api/codex', apiKeyMiddleware, codexRouter);
 app.use('/api/copilot', apiKeyMiddleware, copilotRouter);
 app.use('/api/aider', apiKeyMiddleware, aiderRouter);
 app.use('/api/warp', apiKeyMiddleware, warpRouter);
+app.use('/api/advanced-ai', apiKeyMiddleware, advancedAIRouter);
 
 // Error handling
 app.use(errorHandler);
