@@ -20,6 +20,17 @@ export interface PluginMapping {
   syncTheme: boolean;
 }
 
+export interface ExtensionSettings {
+  [key: string]: unknown;
+}
+
+export interface CodeSnippet {
+  prefix: string;
+  body: string | string[];
+  description?: string;
+  scope?: string;
+}
+
 export class VSCodeIntegration {
   private extensionMappings: Map<string, PluginMapping> = new Map();
   private installedExtensions: VSCodeExtension[] = [];
@@ -75,7 +86,7 @@ export class VSCodeIntegration {
   /**
    * Sync settings from VS Code extension to plugin
    */
-  async syncSettings(extensionId: string, settings: any): Promise<void> {
+  async syncSettings(extensionId: string, settings: ExtensionSettings): Promise<void> {
     const mapping = this.extensionMappings.get(extensionId);
     if (!mapping || !mapping.syncSettings) {
       return;
@@ -91,7 +102,7 @@ export class VSCodeIntegration {
   /**
    * Sync code snippets from VS Code to plugin library
    */
-  async syncSnippets(extensionId: string, snippets: any[]): Promise<void> {
+  async syncSnippets(extensionId: string, snippets: CodeSnippet[]): Promise<void> {
     const mapping = this.extensionMappings.get(extensionId);
     if (!mapping || !mapping.syncSnippets) {
       return;
@@ -107,7 +118,7 @@ export class VSCodeIntegration {
   /**
    * Transform settings format
    */
-  private transformSettings(settings: any): any {
+  private transformSettings(settings: ExtensionSettings): ExtensionSettings & { _source: string; _syncedAt: string } {
     // Map VS Code settings structure to plugin settings
     return {
       ...settings,
@@ -119,7 +130,7 @@ export class VSCodeIntegration {
   /**
    * Transform snippets format
    */
-  private transformSnippets(snippets: any[]): any[] {
+  private transformSnippets(snippets: CodeSnippet[]): Array<CodeSnippet & { _source: string; _syncedAt: string }> {
     return snippets.map(snippet => ({
       ...snippet,
       _source: 'vscode',

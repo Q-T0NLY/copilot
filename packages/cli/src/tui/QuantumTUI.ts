@@ -288,7 +288,8 @@ export class QuantumTUI {
       chalk.magenta
     ];
     const index = Math.floor((frame / 60) % colors.length);
-    return colors[index].bold as any;
+    const colorFunc = colors[index];
+    return colorFunc.bold('') as string;
   }
 
   /**
@@ -428,8 +429,9 @@ export class QuantumTUI {
     try {
       await item.action();
       spinner.succeed(`${item.icon} ${item.label} completed`);
-    } catch (error: any) {
-      spinner.fail(`${item.icon} ${item.label} failed: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      spinner.fail(`${item.icon} ${item.label} failed: ${errorMessage}`);
     }
     
     await this.pause();
