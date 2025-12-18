@@ -9,6 +9,7 @@ import { generateCommand } from './commands/generate.js';
 import { completeCommand } from './commands/complete.js';
 import { crawlCommand } from './commands/crawl.js';
 import { settingsCommand } from './commands/settings.js';
+import { tuiCommand } from './commands/tui.js';
 
 const program = new Command();
 
@@ -71,5 +72,13 @@ program
   .option('-s, --set <key=value>', 'Set a setting')
   .option('-g, --get <key>', 'Get a setting')
   .action(settingsCommand);
+
+program
+  .command('tui')
+  .description('Launch Quantum TUI - Ultra-modern terminal interface')
+  .option('-t, --theme <theme>', 'Theme (quantum, neural, aurora, cyberpunk, neon)', 'quantum')
+  .option('--no-animations', 'Disable animations')
+  .option('--no-ghost-snapshot', 'Disable ghost snapshot/anti-amnesia')
+  .action(tuiCommand);
 
 program.parse();
