@@ -10,6 +10,7 @@ import { databaseRouter } from './routes/database';
 import { healingRouter } from './routes/healing';
 import performanceRouter from './routes/performance';
 import consensusRouter from './routes/consensus';
+import intelligenceRouter from './routes/intelligence';
 import { apiKeyMiddleware } from './middleware/apiKey';
 import { errorHandler } from './middleware/errorHandler';
 import { PostgresDatabase } from './database/postgres';
@@ -56,6 +57,7 @@ app.use('/api/database', apiKeyMiddleware, databaseRouter);
 app.use('/api/healing', apiKeyMiddleware, healingRouter);
 app.use('/api/performance', performanceRouter);
 app.use('/api/consensus', apiKeyMiddleware, consensusRouter);
+app.use('/api/intelligence', apiKeyMiddleware, intelligenceRouter);
 
 // Error handling
 app.use(errorHandler);
